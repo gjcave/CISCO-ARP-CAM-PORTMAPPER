@@ -7,20 +7,11 @@ lst = []
 l4_lst = []
 sort_lst = []
 
-def build_tup(a, b, c):
+def build_tup(*a):
     '''
-    get Vlan, MAC, and inteface
+    get Vlan, MAC, interface, IP wildcard
     '''
-    full_entry = (a, b, c)
-    return full_entry
-
-def build_arp_tup(a, b):
-    full_entry = (a, b)
-    return full_entry
-
-def build_quad_tuple(a, b, c, d):
-    full_entry = (a, b, c, d)
-    return full_entry
+    return a
 
 def getKey(item):
     '''
@@ -34,6 +25,7 @@ for line in fh:
     if not line.startswith('*'):
         continue
     line = line.split()
+
     if not line[3] == 'dynamic':
         continue
     if line[-1].startswith('G'):
@@ -53,7 +45,7 @@ for arp_lst in farp:
     else:
         l4 = arp_lst[1]
         arp_mac = arp_lst[-3]
-        arp = build_arp_tup(l4, arp_mac)
+        arp = build_tup(l4, arp_mac)
         l4_lst.append(arp)
 
 # Verify ARP entry in CAM table
@@ -66,7 +58,7 @@ for i in lst:
             mac_addr = i[1].upper()
             interface = i[2]
             ip_addr = j[0]
-            switch = build_quad_tuple(vlan, mac_addr, interface, ip_addr)
+            switch = build_tup(vlan, mac_addr, interface, ip_addr)
             sort_lst.append(switch)
 
 #Sort tuples by field
